@@ -8,13 +8,14 @@ import (
 	"strings"
 )
 
+// testing : http://daringfireball.net/projects/markdown/syntax#html
 func TestBlockHtml(t *testing.T) {
 	input := ""
 	input += "This is a regular paragraph.\n"
 	input += "\n"
 	input += "<table>\n"
 	input += "    <tr>\n"
-	input += "        <td>Foo</td>\n"
+	input += "        <td>*Foo*</td>\n"
 	input += "    </tr>\n"
 	input += "</table>\n"
 	input += "\n"
@@ -25,7 +26,7 @@ func TestBlockHtml(t *testing.T) {
 	expected += "\n"
 	expected += "<table>\n"
 	expected += "    <tr>\n"
-	expected += "        <td>Foo</td>\n"
+	expected += "        <td>*Foo*</td>\n"
 	expected += "    </tr>\n"
 	expected += "</table>\n"
 	expected += "\n"
