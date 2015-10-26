@@ -2,21 +2,13 @@ package main
 
 import (
 	"fmt"
-	"token"
+	"app"
 )
 
-func print(input chan token.Token) {
-	for element := range input {
-		fmt.Println(fmt.Sprint(element.TokenType) + " - " + element.Value)
-	}
-}
-
 func main() {
-	dummyInput := "bla bla bla \nbla **bla** bl*a bla ** bla**\noi!" 
+	dummyInput := ""
+	dummyInput += "Text attributes *italic*, **bold**, `monospace`, ~~strikethrough~~\n"
+	result := app.GetTestHTML(dummyInput)
 	
-	tokens := make(chan token.Token)
-	
-	go token.Tokenizer(dummyInput, tokens)
-	
-	print(tokens)
+	fmt.Println(result)
 }
