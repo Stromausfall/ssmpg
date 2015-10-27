@@ -1,0 +1,79 @@
+<html>
+	<head>
+		<link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
+		<style type="text/css">		
+			.textContainer {
+				/* align on top */
+				vertical-align:top;
+			
+				/* break words */
+				word-wrap: break-word;
+				
+				/* use the custom font from Google */
+				font-family: 'Inconsolata', ;
+				
+				/* padding between elements */
+				padding: 3ch;
+				
+				/* text should be on the left */
+				text-align:left;
+			}
+			
+			.textContainer.bar {				
+				/* changes the margin - needed to center */
+				margin: 1ch auto;
+				
+				/* text should be in the center */
+				text-align:center;
+			}
+			
+			.textContainer.bar.top {
+				/* max width */
+				width: 60ch;
+			}
+			
+			.textContainer.bar.bottom {
+				/* max width */
+				width: 60ch;
+			}
+			
+			.textContainer.nextToAnother {
+				/* needed for two divs to be next to each other */
+				display: inline-block;
+			}
+			
+			.textContainer.nextToAnother.bodyContainer {
+				/* max width */
+				width: 60ch;
+			}
+			
+			.textContainer.nextToAnother.indexContainer {
+				/* max width */
+				width: 20ch;
+			}
+			
+			.centerContent {
+				text-align:center;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="textContainer bar top">
+XXX-TOPBAR-XXX
+		</div>
+	
+		<div class="centerContent">
+			<div class="textContainer nextToAnother bodyContainer">
+XXX-BODY-XXX
+			</div>
+			<div class="textContainer nextToAnother indexContainer">
+XXX-INDEX-XXX
+			</div>
+		</div>
+		
+		<div class="textContainer bar bottom">
+XXX-BOTTOMBAR-XXX
+		</div>
+	</body>
+</html>
