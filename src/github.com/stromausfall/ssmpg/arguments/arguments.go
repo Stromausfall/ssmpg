@@ -27,10 +27,10 @@ func checkArguments(args []string) []string {
 
 func getAbsPath(path, name string) string {
 	absolutePath, err := filepath.Abs(path)
-	
+
 	if err != nil {
 		fmt.Println("Unable to get absolute path of the " + name + " + argument !");
-		panic("Problem with the " + name + " argument");
+		panic("argument error - problem with the path of the " + name);
 	}
 	
 	return absolutePath
@@ -44,26 +44,26 @@ func checkFile(path, fileEnding string) {
 			fmt.Println("problem with file " + path + " !")
 		}
 		
-		panic("argument error")
+		panic("argument error - file does not exist")
     }
 	
 	if !strings.HasSuffix(path, fileEnding) {
 		fmt.Println("file " + path + " should have file ending : " + fileEnding)
-		panic("argument error")
+		panic("argument error - file has incorrect file ending")
 	}
 }
 
 func checkDir(path string) {
     fileInfo, err := os.Stat(path)
-    
+	
     if err != nil {
     	fmt.Println("problem with directory path : " + path)
-    	panic("argument error")
+    	panic("argument error - directory does not exist")
     }
     
     if !fileInfo.IsDir() {
     	fmt.Println("path : " + path + " is not a directory !")
-    	panic("argument error")
+    	panic("argument error - is not a directory")
     }
 }
 
@@ -73,14 +73,13 @@ func BasicValidationOfConsoleArguments(args []string) (configFile, baseHtml, con
 	configFile = args[0]
 	baseHtml = args[1]
 	contentFolder = args[2]
-	/*
-	configFile = getAbsPath(args[0], "configFile")
+	
+	configFile = getAbsPath(configFile, "configFile")
 	baseHtml = getAbsPath(args[1], "baseHtml")
 	contentFolder = getAbsPath(args[2], "contentFolder")
-	/*
 	checkFile(configFile, ".json")
 	checkFile(baseHtml, ".html")
 	checkDir(contentFolder)
-	*/
+	
 	return
 }
