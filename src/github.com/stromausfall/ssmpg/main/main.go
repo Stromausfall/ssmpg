@@ -8,7 +8,6 @@ import (
 )
 
 func main() {
-	
 	//args := os.Args[1:]
 	//x1, x2, x3 := BasicValidationOfConsoleArguments(args)
 	

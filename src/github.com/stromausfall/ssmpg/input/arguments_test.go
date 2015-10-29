@@ -1,12 +1,12 @@
-package arguments
+package input
 
 import (
 	"fmt"
-    "reflect"
 	"testing"
 	"os"
 	"io/ioutil"
 	"path/filepath"
+	"github.com/stromausfall/ssmpg/utils"
 )
 
 func testAndExpectPanic(configFile, baseHtml, contentFolder, expectedPanic string, t *testing.T) {
@@ -16,28 +16,12 @@ func testAndExpectPanic(configFile, baseHtml, contentFolder, expectedPanic strin
 }    
     
 func testAndExpectPanicWithArgs(args []string, expectedPanic string, t *testing.T) {
-    defer func() {
-        if r := recover(); r != nil {
-        	if r == expectedPanic {
-        		// as expected !
-        		return
-        	}
-			
-			switch r.(type) {
-				case string:
-					t.Error("incorrect panic message : " + fmt.Sprintf("%v", r))
-                default:
-					t.Error("incorrect panic type : " + fmt.Sprintf("%v", reflect.TypeOf(r)))
-            }
-			
-			return
-        }
-        
-        // either no panic or not the correct one !
-        t.Error("expected panic did not happen")
-    }()
-    
-    BasicValidationOfConsoleArguments(args)
+	utils.ExpectException(
+		func() {
+			BasicValidationOfConsoleArguments(args)
+		},
+		expectedPanic,
+		t)
 }
 
 func createFile(filename string) {

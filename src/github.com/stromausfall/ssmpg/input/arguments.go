@@ -1,4 +1,4 @@
-package arguments
+package input
 
 import (
 	"os"
@@ -6,8 +6,6 @@ import (
     "strings"
     "path/filepath"
 )
-
-
 
 func checkArguments(args []string) []string {
 	if args == nil {
