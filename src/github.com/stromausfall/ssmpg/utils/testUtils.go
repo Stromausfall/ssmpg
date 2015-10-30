@@ -1,9 +1,12 @@
 package utils
 
 import (
+	"os"
 	"fmt"
     "reflect"
 	"testing"
+	"io/ioutil"
+	"path/filepath"
 )
     
 func ExpectException(testFunction func(), expectedPanic string, t *testing.T) {
@@ -29,4 +32,31 @@ func ExpectException(testFunction func(), expectedPanic string, t *testing.T) {
 	}()
 	
 	testFunction()
+}
+
+func CreateTestFile(filename, content string) string {
+	path := GetTestPath(filename)
+	CreateFile(path, content)	
+	
+	return path
+}
+
+func CreateFile(filename, content string) {
+	err := ioutil.WriteFile(filename, []byte(content), 0644)
+	
+	if err != nil {
+		fmt.Printf(fmt.Sprint("%v", err))
+		panic("unable to create file in path : " + filename)
+	}
+}
+
+func GetTestPath(filename string) string {
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	
+	if err != nil {
+		fmt.Printf(fmt.Sprint("%v", err))
+		panic("error while getting testPath !")
+	}
+	
+	return filepath.Join(dir, filename)
 }

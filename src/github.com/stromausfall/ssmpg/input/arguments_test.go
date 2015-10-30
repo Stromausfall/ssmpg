@@ -1,11 +1,7 @@
 package input
 
 import (
-	"fmt"
 	"testing"
-	"os"
-	"io/ioutil"
-	"path/filepath"
 	"github.com/stromausfall/ssmpg/utils"
 )
 
@@ -22,26 +18,6 @@ func testAndExpectPanicWithArgs(args []string, expectedPanic string, t *testing.
 		},
 		expectedPanic,
 		t)
-}
-
-func createFile(filename string) {
-	err := ioutil.WriteFile(filename, []byte{}, 0644)
-	
-	if err != nil {
-		fmt.Printf(fmt.Sprint("%v", err))
-		panic("unable to create file in path : " + filename)
-	}
-}
-
-func getTestPath(filename string) string {
-	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
-	
-	if err != nil {
-		fmt.Printf(fmt.Sprint("%v", err))
-		panic("error while getting testPath !")
-	}
-	
-	return filepath.Join(dir, filename)
 }
 
 func TestArgumentNull(t *testing.T) {
@@ -72,37 +48,29 @@ func TestCheckFileExistsForConfigFile(t *testing.T) {
 }
 
 func TestCheckFileHasCorrectEndingForConfigFile(t *testing.T) {
-	filename := getTestPath("fileWithWrongEnding.txt")
-	createFile(filename)
+	filename := utils.CreateTestFile("fileWithWrongEnding.txt", "")
 	testAndExpectPanic(filename, "asdf", "asdf", "argument error - file has incorrect file ending", t)
 }
 
 func TestCheckFileExistsForBaseHtml(t *testing.T) {
-	filename := getTestPath("validEnding.json")
-	createFile(filename)
+	filename := utils.CreateTestFile("validEnding.json", "")
 	testAndExpectPanic(filename, "asdf", "asdf", "argument error - file does not exist", t)
 }
 
 func TestCheckFileHasCorrectEndingForBaseHtml(t *testing.T) {
-	filename := getTestPath("validEnding.json")
-	filename2 := getTestPath("fileWithWrongEnding.txt")
-	createFile(filename)
-	createFile(filename2)
+	filename := utils.CreateTestFile("validEnding.json", "")
+	filename2 := utils.CreateTestFile("fileWithWrongEnding.txt", "")
 	testAndExpectPanic(filename, filename2, "asdf", "argument error - file has incorrect file ending", t)
 }
 
 func TestCheckDirectoryExistsForContentFolder(t *testing.T) {
-	filename := getTestPath("validEnding.json")
-	filename2 := getTestPath("validEnding.html")
-	createFile(filename)
-	createFile(filename2)
+	filename := utils.CreateTestFile("validEnding.json", "")
+	filename2 := utils.CreateTestFile("validEnding.html", "")
 	testAndExpectPanic(filename, filename2, "asdf", "argument error - directory does not exist", t)
 }
 
 func TestCheckFilePathForContentFolderIsADirectory(t *testing.T) {
-	filename := getTestPath("validEnding.json")
-	filename2 := getTestPath("validEnding.html")
-	createFile(filename)
-	createFile(filename2)
+	filename := utils.CreateTestFile("validEnding.json", "")
+	filename2 := utils.CreateTestFile("validEnding.html", "")
 	testAndExpectPanic(filename, filename2, filename2, "argument error - is not a directory", t)
 }
