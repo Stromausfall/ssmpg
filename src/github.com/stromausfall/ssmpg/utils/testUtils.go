@@ -9,39 +9,44 @@ import (
 	"path/filepath"
 )
     
-func ExpectException(testFunction func(), expectedPanic string, t *testing.T) {
-    defer func() {
-	    if r := recover(); r != nil {
-	        if r == expectedPanic {
-	        	// as expected !
-	        	return
-	        }
-	
-			switch r.(type) {
-				case string:
-					t.Error("incorrect panic message : " + fmt.Sprintf("%v", r))
-	            default:
-					t.Error("incorrect panic type : " + fmt.Sprintf("%v", reflect.TypeOf(r)))
-	        }
-	
+func TestExpectException(expectedPanic string, t *testing.T) {
+	if r := recover(); r != nil {
+	    if r == expectedPanic {
+	    	// as expected !
 			return
-	    }
+        }
 	
-	    // either no panic or not the correct one !
-	    t.Error("expected panic did not happen")
-	}()
+		switch r.(type) {
+			case string:
+				t.Error("incorrect panic message : " + fmt.Sprintf("%v", r))
+            default:
+				t.Error("incorrect panic type : " + fmt.Sprintf("%v", reflect.TypeOf(r)))
+        }
 	
-	testFunction()
+		return
+    }
+
+    // either no panic or not the correct one !
+    t.Error("expected panic did not happen")
 }
 
-func CreateTestFile(filename, content string) string {
+func CreateTestFileReturnPath(filename, content string) string {
 	path := GetTestPath(filename)
-	CreateFile(path, content)	
+	CreateTestFile(path, content)	
 	
 	return path
 }
 
-func CreateFile(filename, content string) {
+func CreateTestDirectory(directoryName string) {
+	err := os.Mkdir(directoryName, 0777)
+	
+	if err != nil {
+		fmt.Printf(fmt.Sprint("%v", err))
+		panic("unable to create directory in path : " + directoryName)
+	}
+}
+
+func CreateTestFile(filename, content string) {
 	err := ioutil.WriteFile(filename, []byte(content), 0644)
 	
 	if err != nil {
