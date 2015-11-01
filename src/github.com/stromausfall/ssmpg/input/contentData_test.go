@@ -8,7 +8,12 @@ import (
 	"testing"
 )
 
-const correctContent = "title: Old Pages\ndate: 2015-03-24 22:28\ncategories:\n- X1\n- X2\n---\nOld unsupported pages :"
+const correctTitle = "Old Pages"
+const correctDate = "2015-03-24 22:28"
+const correctContent = "Old unsupported pages :"
+
+var correctCategories = []string{"X1", "X2"}
+var correctData = "title: " + correctTitle + "\ndate: " + correctDate + "\ncategories:\n- " + correctCategories[0] + "\n- " + correctCategories[1] + "\n---\n" + correctContent
 
 func testLoadContentDataExpectException(expectedPanic, argument string, t *testing.T) {
 	defer utils.TestExpectException(expectedPanic, t)
@@ -17,20 +22,20 @@ func testLoadContentDataExpectException(expectedPanic, argument string, t *testi
 }
 
 func TestLoadContentDataWrongPath(t *testing.T) {
-	path := utils.CreateTestFileReturnPath("foo.html", correctContent)
+	path := utils.CreateTestFileReturnPath("foo.html", correctData)
 
 	testLoadContentDataExpectException("error path has to point to a directory", path, t)
 }
 
 func TestLoadContentCorrectContentCount(t *testing.T) {
-	path := utils.CreateTestFileReturnPath("foo.md", correctContent)
+	path := utils.CreateTestFileReturnPath("foo.md", correctData)
 	dirPath := strings.TrimSuffix(path, "foo.md")
 	pathToFolder := filepath.Join(dirPath, "foo")
 
 	utils.CreateTestDirectory(pathToFolder)
-	utils.CreateTestFile(filepath.Join(pathToFolder, "foo1.md"), correctContent)
-	utils.CreateTestFile(filepath.Join(pathToFolder, "foo2.md"), correctContent)
-	utils.CreateTestFile(filepath.Join(pathToFolder, "foo3.md"), correctContent)
+	utils.CreateTestFile(filepath.Join(pathToFolder, "foo1.md"), correctData)
+	utils.CreateTestFile(filepath.Join(pathToFolder, "foo2.md"), correctData)
+	utils.CreateTestFile(filepath.Join(pathToFolder, "foo3.md"), correctData)
 
 	files := LoadContentData(pathToFolder)
 
@@ -40,7 +45,7 @@ func TestLoadContentCorrectContentCount(t *testing.T) {
 }
 
 func TestLoadContentCorrectContentCountWithSubfolders(t *testing.T) {
-	path := utils.CreateTestFileReturnPath("foo.md", correctContent)
+	path := utils.CreateTestFileReturnPath("foo.md", correctData)
 	dirPath := strings.TrimSuffix(path, "foo.md")
 	pathToFolder := filepath.Join(dirPath, "foo2")
 	pathToFolder2 := filepath.Join(pathToFolder, "foo2")
@@ -51,9 +56,9 @@ func TestLoadContentCorrectContentCountWithSubfolders(t *testing.T) {
 	utils.CreateTestDirectory(pathToFolder2)
 	utils.CreateTestDirectory(pathToFolder3)
 	utils.CreateTestDirectory(pathToFolder4)
-	utils.CreateTestFile(filepath.Join(pathToFolder, "foo1.md"), correctContent)
-	utils.CreateTestFile(filepath.Join(pathToFolder2, "foo2.md"), correctContent)
-	utils.CreateTestFile(filepath.Join(pathToFolder4, "foo3.md"), correctContent)
+	utils.CreateTestFile(filepath.Join(pathToFolder, "foo1.md"), correctData)
+	utils.CreateTestFile(filepath.Join(pathToFolder2, "foo2.md"), correctData)
+	utils.CreateTestFile(filepath.Join(pathToFolder4, "foo3.md"), correctData)
 
 	files := LoadContentData(pathToFolder)
 
@@ -63,14 +68,14 @@ func TestLoadContentCorrectContentCountWithSubfolders(t *testing.T) {
 }
 
 func TestLoadContentCorrectContentCountAccordingToFileEnding(t *testing.T) {
-	path := utils.CreateTestFileReturnPath("foo.md", correctContent)
+	path := utils.CreateTestFileReturnPath("foo.md", correctData)
 	dirPath := strings.TrimSuffix(path, "foo.md")
 	pathToFolder := filepath.Join(dirPath, "foo3")
 
 	utils.CreateTestDirectory(pathToFolder)
-	utils.CreateTestFile(filepath.Join(pathToFolder, "foo1.md"), correctContent)
-	utils.CreateTestFile(filepath.Join(pathToFolder, "foo2.markdown"), correctContent)
-	utils.CreateTestFile(filepath.Join(pathToFolder, "foo3.m2"), correctContent)
+	utils.CreateTestFile(filepath.Join(pathToFolder, "foo1.md"), correctData)
+	utils.CreateTestFile(filepath.Join(pathToFolder, "foo2.markdown"), correctData)
+	utils.CreateTestFile(filepath.Join(pathToFolder, "foo3.m2"), correctData)
 
 	files := LoadContentData(pathToFolder)
 
@@ -80,12 +85,12 @@ func TestLoadContentCorrectContentCountAccordingToFileEnding(t *testing.T) {
 }
 
 func TestLoadContentCorrectContentForData(t *testing.T) {
-	path := utils.CreateTestFileReturnPath("foo.md", correctContent)
+	path := utils.CreateTestFileReturnPath("foo.md", correctData)
 	dirPath := strings.TrimSuffix(path, "foo.md")
 	pathToFolder := filepath.Join(dirPath, "foo4")
 
 	utils.CreateTestDirectory(pathToFolder)
-	utils.CreateTestFile(filepath.Join(pathToFolder, "foo1.md"), correctContent)
+	utils.CreateTestFile(filepath.Join(pathToFolder, "foo1.md"), correctData)
 
 	files := LoadContentData(pathToFolder)
 
@@ -101,13 +106,61 @@ func TestLoadContentCorrectContentForData(t *testing.T) {
 	if file.Date.Unix() != 1427236080 {
 		t.Error("date not correctly loaded")
 	}
-	if len(file.Categories) != 2 {
+	if len(file.Categories) != len(correctCategories) {
 		t.Error("category not correctly loaded")
 	}
-	if file.Categories[0] != "X1" || file.Categories[1] != "X2" {
+	if file.Categories[0] != correctCategories[0] || file.Categories[1] != correctCategories[1] {
 		t.Error("category content not correctly loaded")
 	}
-	if file.Content != "Old unsupported pages :" {
+	if file.Content != correctContent {
 		t.Error("content not correctly loaded : '" + file.Content + "'")
 	}
+}
+
+func TestLoadContentMissingTitleException(t *testing.T) {
+	alteredContent := strings.Replace(correctData, correctTitle, "", -1)
+	path := utils.CreateTestFileReturnPath("foo.md", "")
+	dirPath := strings.TrimSuffix(path, "foo.md")
+	pathToFolder := filepath.Join(dirPath, "foo5")
+
+	utils.CreateTestDirectory(pathToFolder)
+	utils.CreateTestFile(filepath.Join(pathToFolder, "foo1.md"), alteredContent)
+
+	testLoadContentDataExpectException("Title missing in content file", pathToFolder, t)
+}
+
+func TestLoadContentMissingDateException(t *testing.T) {
+	alteredContent := strings.Replace(correctData, correctDate, "", -1)
+	path := utils.CreateTestFileReturnPath("foo.md", "")
+	dirPath := strings.TrimSuffix(path, "foo.md")
+	pathToFolder := filepath.Join(dirPath, "foo6")
+
+	utils.CreateTestDirectory(pathToFolder)
+	utils.CreateTestFile(filepath.Join(pathToFolder, "foo1.md"), alteredContent)
+
+	testLoadContentDataExpectException("Date missing in content file", pathToFolder, t)
+}
+
+func TestLoadContentIncorrectDateException(t *testing.T) {
+	alteredContent := strings.Replace(correctData, correctDate, "a"+correctDate+"1", -1)
+	path := utils.CreateTestFileReturnPath("foo.md", "")
+	dirPath := strings.TrimSuffix(path, "foo.md")
+	pathToFolder := filepath.Join(dirPath, "foo7")
+
+	utils.CreateTestDirectory(pathToFolder)
+	utils.CreateTestFile(filepath.Join(pathToFolder, "foo1.md"), alteredContent)
+
+	testLoadContentDataExpectException("Incorrect format of date in content file", pathToFolder, t)
+}
+
+func TestLoadContentMissingContentException(t *testing.T) {
+	alteredContent := strings.Replace(correctData, correctContent, "", -1)
+	path := utils.CreateTestFileReturnPath("foo.md", "")
+	dirPath := strings.TrimSuffix(path, "foo.md")
+	pathToFolder := filepath.Join(dirPath, "foo8")
+
+	utils.CreateTestDirectory(pathToFolder)
+	utils.CreateTestFile(filepath.Join(pathToFolder, "foo1.md"), alteredContent)
+
+	testLoadContentDataExpectException("Content missing in content file", pathToFolder, t)
 }
