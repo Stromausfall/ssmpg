@@ -53,16 +53,13 @@ func createContent(
 func main() {
 	// validate arguments
 	configFile, baseHtml, contentFolder, outputPath := input.BasicValidationOfConsoleArguments(os.Args[1:])
-	
-	//configFile := os.Args[1]
-	//baseHtml := os.Args[2]
-	//contentFolder := os.Args[3]
-	/*
-	configFile := "C:/xxx/input/test.yaml"
-	baseHtml := "C:/xxx/input/base.html"
-	contentFolder := "C:/xxx/input/content"
-	baseFolder := "C:/xxx/output/"
-	*/
+
+/*
+	configFile := "C:/Users/Matthias/OneDrive/GO/ssmpg/input/test.yaml"
+	baseHtml := "C:/Users/Matthias/OneDrive/GO/ssmpg/input/base.html"
+	contentFolder := "C:/Users/Matthias/OneDrive/GO/ssmpg/input/content"
+	outputPath := "C:/xxx/output/"
+*/
 	
 	os.Mkdir(filepath.Join(outputPath, "content"), 777)
 	os.Mkdir(filepath.Join(outputPath, "categories"), 777)

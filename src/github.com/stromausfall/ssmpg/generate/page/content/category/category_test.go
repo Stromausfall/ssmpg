@@ -41,8 +41,8 @@ func TestCreateIndexPage(t *testing.T) {
 	data := CreateIndex(testConfigData, []input.ContentData{testContentData3, testContentData2})
 	expected :=
 		"<h3>Index</h3>\n" +
-			"<a href=\"content/title-3.html\">(2014-01-01) Title#3</a></br>\n" +
-			"<a href=\"content/title-2.html\">(2015-01-01) Title#2</a></br>\n"
+			"<a href=\"content/title-2.html\">(2015-01-01) Title#2</a></br>\n" +
+			"<a href=\"content/title-3.html\">(2014-01-01) Title#3</a></br>\n"
 
 	if data != expected {
 		fmt.Println("expected : '" + expected + "'")
@@ -52,13 +52,13 @@ func TestCreateIndexPage(t *testing.T) {
 }
 
 func TestCreateIndexPageOrdered(t *testing.T) {
-	data := CreateIndex(testConfigData, []input.ContentData{testContentData1, testContentData2, testContentData3})
+	data := CreateIndex(testConfigData, []input.ContentData{testContentData3, testContentData1, testContentData2})
 
 	index1 := strings.Index(data, slug.GenerateSlug(testContentData1.Title))
 	index2 := strings.Index(data, slug.GenerateSlug(testContentData2.Title))
 	index3 := strings.Index(data, slug.GenerateSlug(testContentData3.Title))
 
-	correctOrder := (index3 < index2) && (index2 < index1)
+	correctOrder := (index1 < index2) && (index2 < index3)
 	validIndices := (index1 > 0) && (index2 > 0) && (index3 > 0)
 
 	if !validIndices {
@@ -78,8 +78,8 @@ func TestCreateCategoryPage(t *testing.T) {
 			[]input.ContentData{testContentData1, testContentData2, testContentData3})
 	expected :=
 		"<h3>sdf</h3>\n" +
-			"<a href=\"../content/title-2.html\">(2015-01-01) Title#2</a></br>\n" +
-			"<a href=\"../content/title-1.html\">(2015-01-02) Title#1</a></br>\n"
+			"<a href=\"../content/title-1.html\">(2015-01-02) Title#1</a></br>\n" +
+			"<a href=\"../content/title-2.html\">(2015-01-01) Title#2</a></br>\n"
 
 	if data != expected {
 		fmt.Println("expected : '" + expected + "'")
@@ -93,8 +93,8 @@ func TestCreateIndexChangeIndexAndTitle(t *testing.T) {
 	data := CreateIndex(testConfigData2, []input.ContentData{testContentData3, testContentData2})
 	expected :=
 		"<h2>Index2</h2>\n" +
-			"<a href=\"content/title-3.html\">(2014-01-01) Title#3</a></br>\n" +
-			"<a href=\"content/title-2.html\">(2015-01-01) Title#2</a></br>\n"
+			"<a href=\"content/title-2.html\">(2015-01-01) Title#2</a></br>\n" +
+			"<a href=\"content/title-3.html\">(2014-01-01) Title#3</a></br>\n"
 
 	if data != expected {
 		fmt.Println("expected : '" + expected + "'")

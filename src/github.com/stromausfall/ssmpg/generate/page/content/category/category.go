@@ -48,7 +48,8 @@ func CreateCategoryPage(configData input.ConfigData, category string, elements [
 
 func createLinks(elements []input.ContentData, fromIndex bool) string {
 	sortedElements := elements[:]
-	sort.Sort(sortableByDate(sortedElements))
+	
+	sort.Sort(sort.Reverse(sortableByDate(sortedElements)))
 	content := ""
 
 	for _, element := range sortedElements {
