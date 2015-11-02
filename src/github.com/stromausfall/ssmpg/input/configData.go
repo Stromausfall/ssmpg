@@ -9,6 +9,8 @@ import (
 type ConfigData struct {
 	Topbar    string
 	Bottombar string
+	TitleType string
+	IndexName string
 }
 
 func CreateConfigData(sourcefile string) ConfigData {

@@ -1,4 +1,4 @@
-package conversion
+package slug
 
 import (
 	"strings"

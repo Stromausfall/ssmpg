@@ -1,4 +1,4 @@
-package utils
+package test
 
 import (
 	"os"
@@ -8,7 +8,7 @@ import (
 	"io/ioutil"
 	"path/filepath"
 )
-    
+
 func TestExpectException(expectedPanic string, t *testing.T) {
 	if r := recover(); r != nil {
 	    if r == expectedPanic {
@@ -31,7 +31,7 @@ func TestExpectException(expectedPanic string, t *testing.T) {
 }
 
 func CreateTestFileReturnPath(filename, content string) string {
-	path := GetTestPath(filename)
+	path := filepath.Join(GetTestPath(), filename)
 	CreateTestFile(path, content)	
 	
 	return path
@@ -55,7 +55,7 @@ func CreateTestFile(filename, content string) {
 	}
 }
 
-func GetTestPath(filename string) string {
+func GetTestPath() string {
 	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 	
 	if err != nil {
@@ -63,5 +63,23 @@ func GetTestPath(filename string) string {
 		panic("error while getting testPath !")
 	}
 	
-	return filepath.Join(dir, filename)
+	return dir
+}
+
+func TestValues(t *testing.T, expected, actual, message string) {
+	if expected != actual {
+		fmt.Println("expected : '" + expected + "'")
+		fmt.Println("actual   : '" + actual + "'")
+		t.Error(message)
+	}
+}
+
+func GetTestFileContent(path string) string {
+	result, readFileError := ioutil.ReadFile(path)
+	
+	if readFileError != nil {
+		panic("unable to load file : " + path)
+	}
+	
+	return string(result)
 }

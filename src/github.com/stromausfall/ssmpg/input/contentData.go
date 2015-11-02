@@ -70,6 +70,12 @@ func loadContentRawData(path string) (yamlData, rawContent string) {
 	data, _ := ioutil.ReadFile(path)
 	dataString := string(data)
 	splitIndex := strings.Index(dataString, "---")
+	
+	if splitIndex == -1 {
+		fmt.Println("Problem with file : " + path)
+		panic("Content file must contain '---' to separate config data from content")
+	}
+	
 	createdRawContent := dataString[splitIndex+len("---"):]
 	createdYamlData := dataString[:splitIndex]
 

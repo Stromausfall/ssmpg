@@ -1,8 +1,8 @@
-package conversion
+package slug
 
 import (
 	"fmt"
-	"github.com/stromausfall/ssmpg/utils"
+	"github.com/stromausfall/ssmpg/utils/test"
 	"testing"
 )
 
@@ -18,7 +18,7 @@ func testGenerateSlug(preSlugify, postSlugify string, t *testing.T) {
 }
 
 func TestGenerateSlugEmptyArg(t *testing.T) {
-	defer utils.TestExpectException("no argument passed to convert", t)
+	defer test.TestExpectException("no argument passed to convert", t)
 
 	GenerateSlug("")
 }
