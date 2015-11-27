@@ -1,4 +1,4 @@
-# ssmpg
+# ssmpg [finished]
 Simple Static Markup Page Generator
 
 ## Using the following libraries :
